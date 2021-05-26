@@ -1,40 +1,40 @@
 import axios from 'axios';
 
-export const AnimalController = {
-    register(animal) {
+export const employeeController = {
+    register(employee) {
         return axios({
             method: 'POST',
             baseURL: process.env.API,
-            url: `animals`,
-            data: animal,
+            url: `employees`,
+            data: employee,
         })
     },
     list() {
         return axios({
             method: 'GET',
             baseURL: process.env.API,
-            url: 'animals'
+            url: 'employees'
         });
     },
     delete(name) {
         return axios({
             method: 'DELETE',
             baseURL: process.env.API,
-            url: `animals/${name}`,
+            url: `employees/${name}`,
         });
     },
-    getAnimal(name) {
+    getemployee(name) {
         return axios({
             method: 'GET',
             baseURL: process.env.API,
-            url: `animals/${name}`,
+            url: `employees/${name}`,
         });
     },
-    updateAnimal(name) {
+    updateemployee(name) {
         return axios({
             method: 'PUT',
             baseURL: process.env.API,
-            url: `animals/${name}`,
+            url: `employees/${name}`,
         });
     }
 }

@@ -5,6 +5,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemText from "@material-ui/core/ListItemText";
+import Typography from '@material-ui/core/Typography';
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 
@@ -16,20 +17,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const VaccineList = ({ vaccines }) => {
+export const CoursesList = ({ courses }) => {
   const classes = useStyles();
 
-  return (<List className={classes.root} name="vaccines-list-cat">
-
-    {vaccines.map(vaccine =>
-      <ListItem key={vaccine}>
+  return (
+  
+  <List className={classes.root} name="courses-list-employee">
+    <Typography gutterBottom variant="h6" component="h2" name="position-employee"><strong>Cursos:</strong></Typography>
+    {courses ? courses.map(course =>
+      <ListItem key={course}>
         <ListItemAvatar>
-          <Avatar>
-            <FontAwesomeIcon icon={faCheckCircle} />
+          <Avatar style={{width: "15px", height: "15px"}}>
+            <FontAwesomeIcon icon={faCheckCircle} style={{width: "15px", height: "15px"}}/>
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary={vaccine} />
+        <ListItemText primary={course} style={{width: "15px", height: "30px"}}/>
       </ListItem>
-    )}
+    ): "No tiene cursos"}
   </List>)
 }
