@@ -23,9 +23,9 @@ export default function ListEmployees({ employees }) {
     return (
         <div>
             <Button
-              data-testid="register-button"
               type="cancel"
               fullWidth
+              data-testid = "cancelbutton"
               variant="contained"
               color="primary"
               style={{
@@ -40,13 +40,13 @@ export default function ListEmployees({ employees }) {
             >
               REGRESAR
             </Button>
-            <Grid container justify="center" spacing={2} style={{marginTop : "30px"}}>
+            <Grid container justify="center" data-testid = "principalspace" spacing={2} style={{marginTop : "30px"}}>
                 <Grid item xs={6}>
                 
-                    <Grid container justify="center" alignItems="stretch">
+                    <Grid container justify="center" alignItems="stretch" data-testid = "listspace">
                         
                         {employees!= undefined && employees.length!=0 ? employees.map(employee => (
-                            <Grid key={employee} item xs={4} style={{marginTop : "20px"}}>
+                            <Grid key={employee} item xs={4} style={{marginTop : "20px",marginLeft : "40px"}}>
                                 <EmployeeCard
                                     name={employee.name}
                                     position={employee.rolPosition}

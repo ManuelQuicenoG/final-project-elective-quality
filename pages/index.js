@@ -1,6 +1,4 @@
-import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import Link from 'next/link'
 import Button from "@material-ui/core/Button";
 
 export default function Home() {
@@ -8,7 +6,7 @@ export default function Home() {
     <div className={styles.container} style ={{
       background: "#EAF2E3"
     }}>
-      <img src="https://i.ibb.co/4YJ7NQD/52696.jpg" alt="52696" border="0" style={{
+      <img src="https://i.ibb.co/4YJ7NQD/52696.jpg" alt="52696" border="0" data-testid = "banner" style={{
             marginTop: "64px",
             marginLeft: "32px",
             display: "flex",
@@ -20,7 +18,7 @@ export default function Home() {
         
       <Button
               fullWidth
-              
+              data-testid = "register"
               style={{
                 marginTop: "60px",
                 marginLeft: "0px",
@@ -40,7 +38,7 @@ export default function Home() {
 
             <Button
               fullWidth
-              
+              data-testid = "listemployees"
               style={{
                 marginTop: "15px",
                 marginLeft: "0px",

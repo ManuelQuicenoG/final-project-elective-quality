@@ -1,26 +1,27 @@
 import {Matchers} from '@pact-foundation/pact';
-import {AnimalController} from '../../../controllers';
+import {employeeController} from '../../../controllers';
 import {provider} from '../config/initPact';
 
-describe('Animal Service', () => {
-    describe('When a request to list all animals is made', () => {
+describe('Employee Service', () => {
+    describe('When a request to list all employees is made', () => {
         beforeAll(async () => {
             await provider.setup();
             await provider.addInteraction({
-                uponReceiving: 'a request to list all animals',
-                state: "has animals",
+                uponReceiving: 'a request to list all employees',
+                state: "has employees",
                 withRequest: {
                     method: 'GET',
-                    path: '/animals'
+                    path: '/employees'
                 },
                 willRespondWith: {
                     status: 200,
                     body: Matchers.eachLike(
                         {
-                            name: Matchers.like('manchas'),
-                            breed: Matchers.like("Bengali"),
-                            gender: Matchers.like("Female"),
-                            vaccinated: Matchers.boolean(true)
+                            name: Matchers.like('Manuel nuevo'),
+                            rolPosition: Matchers.like("Administración"),
+                            gender: Matchers.like("Male"),
+                            hasCourses: Matchers.boolean(true),
+                            vaccines: Matchers.eachLike({id:Matchers.like(1211),name:Matchers.like("Inducción")})
                         }
                     )
                 }
@@ -28,7 +29,7 @@ describe('Animal Service', () => {
         });
 
         test('should return the correct data', async () => {
-            const response = await AnimalController.list();
+            const response = await employeeController.list();
             expect(response.data).toMatchSnapshot();
             
             await provider.verify()

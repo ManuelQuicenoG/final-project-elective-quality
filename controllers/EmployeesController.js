@@ -30,11 +30,12 @@ export const employeeController = {
             url: `employees/${name}`,
         });
     },
-    updateemployee(name) {
+    updateemployee(name, employee) {
         return axios({
             method: 'PUT',
             baseURL: process.env.API,
             url: `employees/${name}`,
+            data: employee,
         });
     }
 }

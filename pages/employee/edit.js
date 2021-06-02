@@ -9,62 +9,106 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Paper from "@material-ui/core/Paper";
 import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
+import useSWR from 'swr';
+import axios from 'axios';
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Router from 'next/router';
-import React from 'react';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 import { employeeController } from '../../controllers';
-
+import { WarningTwoTone } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "100vh",
   }
 }));
-export default function Registeremployee({ employees }) {
-  const classes = useStyles();
 
+export default function Editemployee() {
+  let employee = "hola llega";
+  const router = useRouter();
+  const { nameToEdit } = router.query;
+  const { rolPos } = router.query;
+  const {gen} = router.query;
+  const {arrel} = router.query;
+  const classes = useStyles();
+  //const { data } = useSWR('/employee', employeeController.getemployee(nameToEdit))
   // Select rolPositions
-  const [rolPosition, setPosition] = React.useState("");
+  
+  const [rolPosition, setPosition] = React.useState(rolPos);
   const handleChange = (event) => {
     setPosition(event.target.value);
   };
 
+  let [female, setFemale] = React.useState(false);
+  let [male, setMale] = React.useState(false);
+  let [other, setOther] = React.useState(false);
 
-  const [gender, setGender] = React.useState("");
+  const [gender, setGender] = React.useState(gen);
+  if(gender == "Female"){
+    female=true;
+  }else if(gender == "Male"){
+    male=true;
+  }else{
+    other= true;
+  }
   const handleChangeGender = (event) => {
     setGender(event.target.value);
+    if(gender == "Female"){
+      female=true
+      male=false
+      other=false
+    }else if(gender == "Male"){
+      female=false
+      male=true
+      other=false
+    }else{
+      female=false
+      male=false
+      other=true
+    }
   };
-
-  const [name, setName] = React.useState("");
+  
+  const [name, setName] = React.useState(nameToEdit);
   const handleChangeName = (event) => {
     setName(event.target.value); 
   };
+  let split = arrel.split(',');
 
+  let values = [false, false, false, false, false]
+  let posibles = ["Inducción","Seguridad", "Normativa","Valores institucionales", "Terminología"]
+  for(let i = 0; i < 5; i++){
+    for(let y =0; y< split.length && !values[i]; y++){
+      if(split[y]==posibles[i]){
+        values[i]=true;
+      }
+    }    
+  }
 
-  const [courseone, setCourseone] = React.useState(false);
+  const [courseone, setCourseone] = React.useState(values[0]);
   const handleChangeCourse1 = (event) => {
-    setCourseone(event.target.checked);
+    setCourseone(!courseone);
   };
 
-  const [coursetwo, setCoursetwo] = React.useState(false);
+  const [coursetwo, setCoursetwo] = React.useState(values[1]);
   const handleChangeCourse2 = (event) => {
-    setCoursetwo(event.target.checked);
+    setCoursetwo(!coursetwo);
   };
 
-  const [coursethree, setCoursethree] = React.useState(false);
+  const [coursethree, setCoursethree] = React.useState(values[2]);
   const handleChangeCourse3 = (event) => {
-    setCoursethree(event.target.checked);
+    setCoursethree(!coursethree);
   };
   
-  const [coursefour, setCoursefour] = React.useState(false);
+  const [coursefour, setCoursefour] = React.useState(values[3]);
   const handleChangeCourse4 = (event) => {
-    setCoursefour(event.target.checked);
+    setCoursefour(!coursefour);
   };
 
-  const [coursefive, setCoursefive] = React.useState(false);
+  const [coursefive, setCoursefive] = React.useState(values[4]);
   const handleChangeCourse5 = (event) => {
-    setCoursefive(event.target.checked);
+    setCoursefive(!coursefive);
   };
 
   // Checkboxes Courses
@@ -72,15 +116,11 @@ export default function Registeremployee({ employees }) {
   // Terms and conditions
   const [checked, setChecked] = React.useState(false);
   let isDisable = true;
-  const handleChangeTermsConditions = (event) => {
-    setChecked(event.target.checked);
-    isDisable = !isDisable;
-  };
 
   const registeremployee = async event => {
     
     event.preventDefault()
-    let courses = [];
+    let courses = []
     if(courseone){
       courses.push("Inducción");
     }
@@ -103,12 +143,10 @@ export default function Registeremployee({ employees }) {
       hasCourses: courses.length > 0,
       courses: courses
     } 
-    try{
-      await employeeController.register(employee)
+
+      console.log(employee)
+      await employeeController.updateemployee(nameToEdit, employee)
       Router.push("/employee/list")
-    }catch(error){
-      window.alert("Un empleado con ese nombre ya se encuentra registrado");
-    }
     
   }
 
@@ -145,7 +183,7 @@ export default function Registeremployee({ employees }) {
           <Avatar style={{ margin: "8px 8px"}}>
           </Avatar>
           <Typography variant="h3">
-            Registro de empleados
+            Editar un empleado
           </Typography>
           <form onSubmit={registeremployee} noValidate style={{ width: "100%", marginTop: "8px" }}>
             <TextField
@@ -184,17 +222,17 @@ export default function Registeremployee({ employees }) {
             </Select>
             <div style={{ marginTop: "16px" }}>
               <div>
-                  <h2 data-testid = "generoText">Género *</h2>
+                  <h2>Género *</h2>
               </div>
                   
-              <input type="radio" id="female" value="Female" name="gender" data-testid="female" 
-                    onChange={handleChangeGender}/>
+              <input type="radio" id="female" value="Female" name="gender" 
+                    onChange={handleChangeGender} checked = {female}/>
                    <label>Femenino</label>
-                  <input type="radio" id="male" value="Male" name="gender" data-testid="male"
-                    onChange={handleChangeGender}/>
+                  <input type="radio" id="male" value="Male" name="gender"
+                    onChange={handleChangeGender} checked ={male}/>
                   <label>Masculino</label>
-                  <input type="radio" id="other" value="Other" name="gender" data-testid="other"
-                    onChange={handleChangeGender}/>
+                  <input type="radio" id="other" value="Other" name="gender" 
+                    onChange={handleChangeGender} checked = {other}/>
                   <label>Otro</label>
             </div>
             <div style={{ marginTop: "16px" }}>
@@ -205,6 +243,7 @@ export default function Registeremployee({ employees }) {
                     <input type ="checkbox"
                       onChange={handleChangeCourse1}
                       name="induccion"
+                      checked={courseone}
                     />
                   }
                   label="Inducción"
@@ -214,6 +253,7 @@ export default function Registeremployee({ employees }) {
                     <input type ="checkbox"
                       onChange={handleChangeCourse2}
                       name="seguridad"
+                      checked={coursetwo}
                     />
                   }
                   label="Seguridad"
@@ -223,6 +263,7 @@ export default function Registeremployee({ employees }) {
                     <input type ="checkbox"
                       onChange={handleChangeCourse3}
                       name="normativa"
+                      checked={coursethree}
                     />
                   }
                   label="Normativa"
@@ -233,6 +274,7 @@ export default function Registeremployee({ employees }) {
                     <input type ="checkbox"
                       onChange={handleChangeCourse4}
                       name="valores"
+                      checked={coursefour}
                     />
                   }
                   label="Valores institucionales"
@@ -243,32 +285,20 @@ export default function Registeremployee({ employees }) {
                     <input type ="checkbox"
                       onChange={handleChangeCourse5}
                       name="terminologia"
+                      checked={coursefive}
                     />
                   }
                   label="Terminología"
                 /></p>
             </div>
             </div>
-            <div style={{ marginTop: "16px", marginLeft: "260px", rolPosition: "relative" }}>
-              <FormControlLabel
-                control={
-                  <input type ="checkbox"
-                    id="terms-and-condition"
-                    checked={checked}
-                    onChange={handleChangeTermsConditions}
-                  />
-                }
-                label="Acepto Términos y Condiciones *"
-              />
-            </div>
-            <p></p>
             <Button
               data-testid="register-button"
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
-              disabled={!checked || gender=="" || rolPosition == "" || name == ""}
+              disabled={gender=="" || rolPosition == "" || name == ""}
               style={{
                 marginTop: "16px",
                 marginBottom: "24px",
@@ -276,12 +306,12 @@ export default function Registeremployee({ employees }) {
                 marginRight: "16px",
               }}
             >
-              REGISTRAR
+              EDITAR
             </Button>
             
           </form>
           <Button
-              data-testid="cancel-button"
+              data-testid="register-button"
               type="cancel"
               fullWidth
               variant="contained"
@@ -292,7 +322,7 @@ export default function Registeremployee({ employees }) {
                 marginLeft: "0px",
                 marginRight: "16px",
               }}
-              href="/"
+              href="/employee/list/"
             >
               CANCELAR
             </Button>
