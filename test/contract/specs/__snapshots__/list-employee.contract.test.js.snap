@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Employee Service When a request to list all employees is made should return the correct data 1`] = `
+Array [
+  Object {
+    "gender": "Male",
+    "hasCourses": true,
+    "name": "manuel nuevo",
+    "rolPosition": "Administración",
+  },
+]
+`;

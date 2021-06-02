@@ -3,7 +3,7 @@ import { Pact } from "@pact-foundation/pact";
 import path from 'path';
 
 const consumerName = 'EmployeeFront';
-const providerName = 'EmployeeShelterBack';
+const providerName = 'EmployeeBack';
 
 export const provider = new Pact({
     consumer: consumerName,
