@@ -13,7 +13,7 @@ describe('Employee Service', () => {
                 state: "has employees",
                 withRequest: {
                     method: 'GET',
-                    path: '/animals'
+                    path: '/employees'
                 },
                 willRespondWith: {
                     status: 200,
